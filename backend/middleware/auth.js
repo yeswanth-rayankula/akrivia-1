@@ -12,7 +12,7 @@ console.log(token);
   try {
     // Verify the token using jwt.verify
     const decoded = jwt.verify(token, JWT_SECRET); // Decodes and verifies the token
-    req.user = decoded; // Store the decoded token in the request object (you can access it in later middleware/routes)
+    //req.user = decoded; // Store the decoded token in the request object (you can access it in later middleware/routes)
     next(); // Call the next middleware/route handler
   } catch (err) {
     return res.status(401).send('Invalid or expired token');

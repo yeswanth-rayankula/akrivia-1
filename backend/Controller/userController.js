@@ -5,7 +5,7 @@ const { generateToken } = require('../utils/jwtUtils');
 
 const registerUser = async (req, res) => {
   const { name, pass } = req.body;
-
+  console.log("hello");
   if (!name || !pass) {
     return res.status(400).send('Name and password are required.');
   }
