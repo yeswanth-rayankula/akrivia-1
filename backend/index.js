@@ -1,6 +1,7 @@
 const express = require("express");
-const { db } = require("./Database/Dbconnect.js");
+
 const userRouter = require('./router/userRouter.js');
+const restaurantRouter = require('./router/restaurantRouter.js');
 const port = process.env.PORT || 4000;
 const app = express();
 const cookieParser = require('cookie-parser');
@@ -8,12 +9,12 @@ const cors = require('cors');
 const { verifyToken } = require('./middleware/auth.js');
 
 require('dotenv').config(); 
-console.log('DB_HOST:', process.env.DB_HOST); // Should log "localhost"
-console.log('DB_USER:', process.env.DB_USER); // Should log "root"
+console.log('DB_HOST:', process.env.DB_HOST); 
+console.log('DB_USER:', process.env.DB_USER); 
 
 require('dotenv').config();
 
-db(); 
+
 app.use(cookieParser());
 app.use(express.json());
 
@@ -30,7 +31,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/user", userRouter);
 
 
-
+app.use("/api/v1/restaurant", restaurantRouter);
 
 
 app.listen(port, () => {

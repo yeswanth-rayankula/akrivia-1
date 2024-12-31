@@ -20,7 +20,7 @@ export class LoginComponent {
     this.authService.login(this.name, this.pass).then((success) => {
       if (success) {
         
-        this.router.navigate(['/home']);
+        this.router.navigate(['/restaurant']);
       } else {
        
         alert("Login failed. Please check your credentials.");

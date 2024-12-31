@@ -18,7 +18,7 @@ export class AuthService {
       axios
         .post(`http://localhost:4000/api/v1/user/login`, loginData)
         .then((response) => {
-         
+          console.log(response.data.message);
           this.cookieService.set('jwt_token', response.data.token);
           console.log('Token saved to cookies:', response.data.token); 
           resolve(true); 
