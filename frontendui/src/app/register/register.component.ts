@@ -12,7 +12,7 @@ import axios from 'axios';
 })
 export class RegisterComponent {
   username='';
-  mail= '';
+  email= '';
   password = '';
   confirmPassword = '';
 
@@ -24,7 +24,7 @@ export class RegisterComponent {
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!this.mail || !emailRegex.test(this.mail)) {
+    if (!this.email || !emailRegex.test(this.email)) {
       alert('Please enter a valid email address!');
       return;
     }
@@ -39,7 +39,7 @@ export class RegisterComponent {
 
     const registerData = {
       name:this.username,
-      mail: this.mail,
+      email: this.email,
 
       pass: this.password
     };

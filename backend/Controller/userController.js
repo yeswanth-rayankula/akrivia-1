@@ -58,10 +58,10 @@ const loginUser = async (req, res) => {
     if (!isValid) {
       return res.status(401).send('Invalid password.');
     }
-    // console.log(user.email);
+   
 
     const token = generateToken({ email: user.email,name:user.name });
-    // console.log(user.email);
+   
 
     console.log(token);
      res.status(200).json({
