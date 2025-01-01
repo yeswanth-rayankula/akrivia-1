@@ -8,8 +8,8 @@ const cors = require('cors');
 const { verifyToken } = require('./middleware/auth.js');
 
 require('dotenv').config(); 
-console.log('DB_HOST:', process.env.DB_HOST); // Should log "localhost"
-console.log('DB_USER:', process.env.DB_USER); // Should log "root"
+console.log('DB_HOST:', process.env.DB_HOST); 
+console.log('DB_USER:', process.env.DB_USER); 
 
 require('dotenv').config();
 

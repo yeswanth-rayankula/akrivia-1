@@ -4,27 +4,27 @@ const { generateToken } = require('../utils/jwtUtils');
 
 
 const registerUser = async (req, res) => {
-  const { name, pass } = req.body;
+  const { name,email, pass } = req.body;
   console.log("hello");
-  if (!name || !pass) {
-    return res.status(400).send('Name and password are required.');
+  if (!email || !name || !pass) {
+    return res.status(400).send('Name,email and password are required.');
   }
 
   try {
     
     const connection = await db();
-    const checkUserSql = 'SELECT * FROM task1 WHERE name = ?';
-    const [existingUser] = await connection.execute(checkUserSql, [name]);
+    const checkUserSql = 'SELECT * FROM task1 WHERE email = ?';
+    const [existingUser] = await connection.execute(checkUserSql, [email]);
 
     if (existingUser.length > 0) {
       
-      return res.status(400).send('User with this name already exists.');
+      return res.status(400).send('User with this email already exists.');
     }
 
  
     const hashedPassword = await bcrypt.hash(pass, 10);
-    const insertUserSql = 'INSERT INTO task1 (name, pass) VALUES (?, ?)';
-    const [result] = await connection.execute(insertUserSql, [name, hashedPassword]);
+    const insertUserSql = 'INSERT INTO task1 (email,name, password) VALUES (?,?, ?)';
+    const [result] = await connection.execute(insertUserSql, [email,name, hashedPassword]);
 
     res.send('User registered successfully');
   } catch (err) {
@@ -36,17 +36,17 @@ const registerUser = async (req, res) => {
 
 
 const loginUser = async (req, res) => {
-  const { name, pass } = req.body;
+  const { email, pass } = req.body;
 
-  if (!name || !pass) {
-    return res.status(400).send('Name and password are required.');
+  if (!email || !pass) {
+    return res.status(400).send('email and password are required.');
   }
 
   try {
    
     const connection = await db();  
-    const sql = 'SELECT * FROM task1 WHERE name = ?';
-    const [rows] = await connection.execute(sql, [name]);  
+    const sql = 'SELECT * FROM task1 WHERE email = ?';
+    const [rows] = await connection.execute(sql, [email]);  
 
     if (rows.length === 0) {
       return res.status(401).send('User not found.');
@@ -54,23 +54,17 @@ const loginUser = async (req, res) => {
 
     const user = rows[0];
 
-    const isValid = await bcrypt.compare(pass, user.pass);
+    const isValid = await bcrypt.compare(pass, user.password);
     if (!isValid) {
       return res.status(401).send('Invalid password.');
     }
+    // console.log(user.email);
 
-    const token = generateToken({ name: user.name });
+    const token = generateToken({ email: user.email,name:user.name });
+    // console.log(user.email);
+
     console.log(token);
-    
-    res.cookie('jwt_token', token, {
-      httpOnly: true,      
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 3600000,     
-      path: '/'             
-    });
-    
-   
-    res.status(200).json({
+     res.status(200).json({
       message: 'User logged in successfully',
       token: token  
     });
