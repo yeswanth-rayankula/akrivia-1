@@ -1,52 +1,28 @@
-const express = require("express");
-const { db } = require("./Database/Dbconnect.js");
-const userRouter = require('./router/userRouter.js');
-const port = process.env.PORT || 4000;
+const express = require('express');
 const app = express();
-const cookieParser = require('cookie-parser');
-const cors = require('cors');  
-const { verifyToken } = require('./middleware/auth.js');
 
-require('dotenv').config(); 
-console.log('DB_HOST:', process.env.DB_HOST); 
-console.log('DB_USER:', process.env.DB_USER); 
 
-require('dotenv').config();
+const registerRoutes = require('./appraisal/v1/register/register.routes');
+const loginRoutes = require('./appraisal/v1/login/login.routes');
+const verifyToken = require('./appraisal/middlewares/auth.js');
+const cors = require('cors');
+const paginationRouter = require('./appraisal/v1/pagination/pagination.routes.js');
 
-db(); 
-app.use(cookieParser());
+require('./appraisal/config/dbConfig.js');
+
 app.use(express.json());
-
 app.use(cors({
-  origin: 'http://localhost:4200', 
+  origin: 'http://localhost:4200',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true 
+  credentials: true,
 }));
 
-app.get("/", (req, res) => {
-  res.send("Hello, world! The server is running.");
+app.use('/api/v1/user/register', registerRoutes);
+app.use('/api/v1/user/login', loginRoutes);
+
+app.use('/api/v1/user/dashboard', verifyToken, (req, res) => {
+  res.status(200).json({ message: 'Welcome' });
 });
 
-app.use("/api/v1/user", userRouter);
-
-
-
-
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
-//joi  -backend validation
-//orms -knex 
-//objection js 
-//global error handling
-// global logging
-// async await ,promise chaining
-//interceptors
-//file upload =>options
-//showing large records
-// process management tools pm2
-//folder structure
-
-
+app.use('/api/v1/user/restaurants', paginationRouter)
+app.listen(4000, () => console.log('Server running on port 4000'));

@@ -1,13 +1,69 @@
-<div class="home">
-     <h1>Home Page</h1>
+<div class="container">
+  <div class="navbar">
+    <div class="welcome-message">
+      <h1>Welcome, {{ userName }}!</h1>
+    </div>
+
    
-     
-     
-       <h2>Welcome, {{ userName }}!</h2>
-       <p>Your email: {{ userEmail }}</p>
-   
-   
-    
-     
-   </div>
-   
+    <div class="search">
+      <label for="search">Search: </label>
+      <input
+        type="text"
+        id="search"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()"
+        [disabled]="isLoading"
+        placeholder="Search by restaurant name"
+      />
+    </div>
+
+
+    <div class="sorting">
+      <label for="sort">Sort by Price: </label>
+      <select id="sort" [(ngModel)]="sortOrder" (change)="onSortChange()" [disabled]="isLoading">
+        <option value="none">No Sorting</option>
+        <option value="asc">Price: Low to High</option>
+        <option value="desc">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+
+
+  <div *ngIf="restaurants.length > 0; else noRestaurants">
+    <ul class="restaurant-list">
+      <li *ngFor="let restaurant of restaurants">
+        <strong>{{ restaurant.restaurant_name }}</strong>
+        <p>{{ restaurant.location }}</p>
+        <p>Average Price: ${{ restaurant.average_price }}</p>
+      </li>
+    </ul>
+
+    <div class="pagination">
+      <button
+        (click)="handlePrevious()"
+        [disabled]="!pagination.hasPrevious || isLoading"
+        class="pagination-button"
+      >
+        Previous
+      </button>
+      <span class="pagination-info">
+        Page {{ pagination.page }} of {{ pagination.totalPages }}
+      </span>
+      <button
+        (click)="handleNext()"
+        [disabled]="!pagination.hasNext || isLoading"
+        class="pagination-button"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+
+
+  <ng-template #noRestaurants>
+    <p *ngIf="!isLoading">No restaurants found. Please select a sorting option to begin.</p>
+    <div *ngIf="isLoading" class="loading-spinner">
+      <p>Loading...</p>
+    </div>
+  </ng-template>
+</div>
